@@ -1,0 +1,11 @@
+# Netlify config: app lives in portfolio-build (Next.js)
+[build]
+  base = "portfolio-build"
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# Forms: hidden form in layout.tsx so Netlify auto-detects "contact" at deploy (no extra setup).
+# Optional: Netlify Dashboard → Forms → Form notifications → Email → collab.zaidbuilds@gmail.com

@@ -1,0 +1,17 @@
+# Dependencies
+node_modules/
+portfolio-build/node_modules/
+
+# Next.js
+portfolio-build/.next/
+portfolio-build/out/
+
+# Env and secrets
+.env
+.env.local
+.env.*.local
+
+# Misc
+.DS_Store
+*.log
+.vercel
