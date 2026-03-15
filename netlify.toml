@@ -2,7 +2,7 @@
 [build]
   base = "portfolio-build"
   command = "npm run build"
-  publish = ".next"
+  # Do not set publish — let @netlify/plugin-nextjs manage output
 
 [build.environment]
   NODE_VERSION = "20"
