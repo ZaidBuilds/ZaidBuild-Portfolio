@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 
 const SENTENCE = "I wire AI agents, automation workflows, and intelligent systems into the core of how businesses operate.";
@@ -8,7 +8,19 @@ const HIGHLIGHTS = ["AI", "agents", "intelligent", "systems", "core"];
 
 export const WordByWordText = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      const isTouchDevice = window.matchMedia('(pointer: coarse)').matches;
+      const isSmallScreen = window.innerWidth < 768;
+      setIsMobile(isTouchDevice || isSmallScreen);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   // Track scroll through the section
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -16,7 +28,7 @@ export const WordByWordText = () => {
   });
 
   return (
-    <section ref={containerRef} className="relative bg-[#080808] z-10" style={{ height: "200vh" }}>
+    <section ref={containerRef} className="relative bg-[#080808] z-10" style={{ height: isMobile ? "150vh" : "200vh" }}>
       <div className="sticky top-0 h-screen w-full flex items-center justify-center px-[8vw]">
         <div className="flex flex-wrap justify-center items-center max-w-[1400px] gap-x-[0.35em] gap-y-[0.1em]">
           {WORDS.map((word, i) => {
@@ -66,7 +78,7 @@ const WordSpan = ({ word, range, isHighlighted, progress }: {
   return (
     <motion.span
       style={{ opacity, color }}
-      className={`font-sans font-extrabold text-[clamp(2rem,6vw,5.5rem)] leading-[1.05] tracking-tight whitespace-nowrap italic`}
+      className="font-sans font-extrabold text-[clamp(1.5rem,5vw,5.5rem)] leading-[1.1] md:leading-[1.05] tracking-tight italic"
     >
       {word}
     </motion.span>

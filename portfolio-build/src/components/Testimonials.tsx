@@ -1,5 +1,5 @@
 "use client";
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
 const TESTIMONIALS = [
@@ -29,29 +29,29 @@ const TESTIMONIALS = [
   },
 ];
 
-const TestimonialCard = ({ item }: { item: typeof TESTIMONIALS[0] }) => (
-  <div className="w-[320px] bg-[#111111] border border-[#1e1e1e] rounded-md p-6 mx-3 flex flex-col relative group shrink-0 transition-all duration-300 hover:border-[rgba(245,245,245,0.2)] hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,0,0,0.4)]">
-    <span className="absolute top-0 left-2 font-serif italic text-7xl text-[rgba(245,245,245,0.06)] pointer-events-none select-none">"</span>
+const TestimonialCard = ({ item, isMobile }: { item: typeof TESTIMONIALS[0], isMobile?: boolean }) => (
+  <div className="w-[280px] md:w-[320px] bg-[#111111] border border-[#1e1e1e] rounded-md p-5 md:p-6 mx-2 md:mx-3 flex flex-col relative group shrink-0 transition-all duration-300 hover:border-[rgba(245,245,245,0.2)] hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,0,0,0.4)]">
+    <span className="absolute top-0 left-2 font-serif italic text-5xl md:text-7xl text-[rgba(245,245,245,0.06)] pointer-events-none select-none">"</span>
     
-    <p className="relative z-10 font-serif italic text-[0.95rem] text-[rgba(245,245,245,0.7)] leading-[1.85] mb-6 pt-4">
+    <p className="relative z-10 font-serif italic text-[0.85rem] md:text-[0.95rem] text-[rgba(245,245,245,0.7)] leading-[1.7] md:leading-[1.85] mb-4 md:mb-6 pt-3 md:pt-4">
       {item.quote}
     </p>
 
-    <div className="w-full h-[1px] bg-[#1e1e1e] mb-6" />
+    <div className="w-full h-[1px] bg-[#1e1e1e] mb-4 md:mb-6" />
 
-    <div className="flex items-center gap-4">
-      <div className="w-10 h-10 rounded-full bg-[rgba(245,245,245,0.08)] border border-[#1e1e1e] flex items-center justify-center">
-        <span className="font-mono text-[0.65rem] text-[#f5f5f5] tracking-widest uppercase">{item.initials}</span>
+    <div className="flex items-center gap-3 md:gap-4">
+      <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-[rgba(245,245,245,0.08)] border border-[#1e1e1e] flex items-center justify-center">
+        <span className="font-mono text-[0.6rem] md:text-[0.65rem] text-[#f5f5f5] tracking-widest uppercase">{item.initials}</span>
       </div>
       <div className="flex flex-col">
-        <span className="font-sans font-semibold text-[0.85rem] text-[#f5f5f5]">{item.name}</span>
-        <span className="font-mono text-[0.7rem] text-[rgba(245,245,245,0.35)] uppercase tracking-widest">{item.role}</span>
+        <span className="font-sans font-semibold text-[0.8rem] md:text-[0.85rem] text-[#f5f5f5]">{item.name}</span>
+        <span className="font-mono text-[0.65rem] md:text-[0.7rem] text-[rgba(245,245,245,0.35)] uppercase tracking-widest">{item.role}</span>
       </div>
     </div>
   </div>
 );
 
-const Row = ({ quotes, speed, reverse = false }: { quotes: typeof TESTIMONIALS, speed: string, reverse?: boolean }) => {
+const Row = ({ quotes, speed, reverse = false, isMobile }: { quotes: typeof TESTIMONIALS, speed: string, reverse?: boolean, isMobile?: boolean }) => {
   // Triple the items for seamless infinite scroll
   const tripledItems = [...quotes, ...quotes, ...quotes];
   const animClass = reverse ? "animate-marquee-right" : "animate-marquee-left";
@@ -63,7 +63,7 @@ const Row = ({ quotes, speed, reverse = false }: { quotes: typeof TESTIMONIALS, 
         style={{ animationDuration: speed }}
       >
         {tripledItems.map((item, i) => (
-          <TestimonialCard key={i} item={item} />
+          <TestimonialCard key={i} item={item} isMobile={isMobile} />
         ))}
       </div>
     </div>
@@ -71,14 +71,27 @@ const Row = ({ quotes, speed, reverse = false }: { quotes: typeof TESTIMONIALS, 
 };
 
 export const Testimonials = () => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      const isTouchDevice = window.matchMedia('(pointer: coarse)').matches;
+      const isSmallScreen = window.innerWidth < 768;
+      setIsMobile(isTouchDevice || isSmallScreen);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   return (
-    <section className="bg-[#0d0d0d] py-32 overflow-hidden border-t border-b border-[#1e1e1e] relative z-20">
-      <div className="max-w-[1400px] mx-auto px-[5vw] mb-20">
+    <section className="bg-[#0d0d0d] py-20 md:py-32 overflow-hidden border-t border-b border-[#1e1e1e] relative z-20">
+      <div className="max-w-[1400px] mx-auto px-[5vw] mb-12 md:mb-20">
         <motion.span 
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          className="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-[rgba(245,245,245,0.4)] mb-8 block"
+          className="font-mono text-[0.6rem] md:text-[0.65rem] uppercase tracking-[0.2em] text-[rgba(245,245,245,0.4)] mb-4 md:mb-8 block"
         >
           // what clients say
         </motion.span>
@@ -86,14 +99,14 @@ export const Testimonials = () => {
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="font-serif italic text-[clamp(2.5rem,5vw,4rem)] text-[#f5f5f5] leading-none"
+          className="font-serif italic text-[clamp(2rem,5vw,4rem)] text-[#f5f5f5] leading-none"
         >
           Delivered. Not just built.
         </motion.h2>
       </div>
 
-      <div className="flex flex-col gap-6">
-        <Row quotes={TESTIMONIALS} speed="35s" />
+      <div className="flex flex-col gap-4 md:gap-6">
+        <Row quotes={TESTIMONIALS} speed={isMobile ? "25s" : "35s"} isMobile={isMobile} />
       </div>
     </section>
   );

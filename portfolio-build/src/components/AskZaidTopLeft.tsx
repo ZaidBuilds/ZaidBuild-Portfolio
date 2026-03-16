@@ -12,7 +12,7 @@ export const AskZaidTopLeft = () => {
   const bubbleY = useTransform(scrollYProgress, [0.08, 0.16], [6, 0]);
 
   return (
-    <div className="fixed right-6 top-[5.25rem] z-[90] pointer-events-auto hidden sm:block">
+    <div className="fixed right-4 md:right-6 top-[5.25rem] z-[90] pointer-events-auto">
       <button
         onClick={() => (window as any).openAskZaid?.()}
         className="group flex flex-col items-end cursor-pointer text-right focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50 rounded"
@@ -31,7 +31,7 @@ export const AskZaidTopLeft = () => {
         />
         <motion.div
           style={{ opacity: bubbleOpacity, y: bubbleY }}
-          className="mt-0.5 px-3 py-2 rounded-lg border border-white/15 bg-black/60 backdrop-blur-sm min-w-[180px] text-right"
+          className="hidden sm:block mt-0.5 px-3 py-2 rounded-lg border border-white/15 bg-black/60 backdrop-blur-sm min-w-[180px] text-right"
         >
           <p className="font-mono text-[0.6rem] uppercase tracking-[0.12em] text-white/70 leading-snug">
             Don&apos;t scroll 6689 pixel — <span className="text-white font-semibold">askZaid!</span>

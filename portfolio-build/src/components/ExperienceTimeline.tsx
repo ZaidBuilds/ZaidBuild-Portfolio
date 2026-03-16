@@ -1,6 +1,6 @@
 "use client";
-import React, { useRef } from 'react';
-import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
+import React, { useRef, useState, useEffect } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 
 const EXPERIENCE = [
   {
@@ -32,15 +32,28 @@ const EXPERIENCE = [
 
 export const ExperienceTimeline = () => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      const isTouchDevice = window.matchMedia('(pointer: coarse)').matches;
+      const isSmallScreen = window.innerWidth < 768;
+      setIsMobile(isTouchDevice || isSmallScreen);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"]
   });
 
-  const x = useTransform(scrollYProgress, [0, 1], ["0%", "-90%"]);
+  const x = useTransform(scrollYProgress, [0, 1], ["0%", isMobile ? "-60%" : "-90%"]);
 
   return (
-    <section id="experience" ref={containerRef} className="relative bg-[#080808] h-[400vh]">
+    <section id="experience" ref={containerRef} className="relative bg-[#080808]" style={{ height: isMobile ? "300vh" : "400vh" }}>
       <div className="sticky top-0 h-screen w-full flex flex-col justify-center overflow-hidden">
         
         {/* Header (Stay fixed) */}
@@ -58,11 +71,11 @@ export const ExperienceTimeline = () => {
         </div>
 
         {/* Horizontal Container */}
-        <motion.div style={{ x }} className="flex gap-8 px-[5vw] items-stretch">
+        <motion.div style={{ x }} className="flex gap-6 md:gap-8 px-[5vw] items-stretch">
           {EXPERIENCE.map((item, i) => (
             <motion.div 
               key={i}
-              className="min-w-[400px] md:min-w-[600px] bg-[#0d0d0d] border border-white/5 p-12 relative group"
+              className="min-w-[85vw] md:min-w-[600px] bg-[#0d0d0d] border border-white/5 p-6 md:p-12 relative group"
             >
               <span className="absolute top-8 right-12 font-mono text-[4rem] text-white/[0.03] leading-none select-none">
                 {item.date.split(' ')[0]}
@@ -70,23 +83,23 @@ export const ExperienceTimeline = () => {
               
               <div className="relative z-10 flex flex-col h-full justify-between">
                 <div>
-                  <span className="font-mono text-[0.6rem] uppercase tracking-[0.3em] text-white/30 block mb-8">
+                  <span className="font-mono text-[0.55rem] md:text-[0.6rem] uppercase tracking-[0.3em] text-white/30 block mb-4 md:mb-8">
                     Phase_{i.toString().padStart(2, '0')}
                   </span>
-                  <h3 className="font-serif italic text-4xl text-white mb-4 leading-tight">
+                  <h3 className="font-serif italic text-2xl md:text-4xl text-white mb-2 md:mb-4 leading-tight">
                     {item.title}
                   </h3>
-                  <p className="font-mono text-[0.55rem] uppercase tracking-widest text-white/20 mb-8">
+                  <p className="font-mono text-[0.5rem] md:text-[0.55rem] uppercase tracking-widest text-white/20 mb-4 md:mb-8">
                     {item.company}
                   </p>
-                  <p className="font-sans text-[1.1rem] text-white/40 leading-relaxed font-light">
+                  <p className="font-sans text-sm md:text-[1.1rem] text-white/40 leading-relaxed font-light">
                     {item.description}
                   </p>
                 </div>
 
-                <div className="mt-12 flex items-center gap-4">
+                <div className="mt-6 md:mt-12 flex items-center gap-3 md:gap-4">
                   <div className={`w-2 h-2 rounded-full ${item.latest ? 'bg-white animate-pulse shadow-[0_0_8px_white]' : 'bg-white/10'}`} />
-                  <span className="font-mono text-[0.5rem] uppercase tracking-[0.3em] text-white/30 truncate">
+                  <span className="font-mono text-[0.45rem] md:text-[0.5rem] uppercase tracking-[0.3em] text-white/30 truncate">
                     {item.latest ? 'Current Deployment' : 'Archive Complete'}
                   </span>
                 </div>
@@ -98,9 +111,9 @@ export const ExperienceTimeline = () => {
           ))}
           
           {/* End of Line card */}
-          <div className="min-w-[400px] flex items-center justify-center">
+          <div className="min-w-[60vw] md:min-w-[400px] flex items-center justify-center">
              <div className="text-center">
-                <span className="font-serif italic text-white/20 text-2xl">To be continued...</span>
+                <span className="font-serif italic text-white/20 text-xl md:text-2xl">To be continued...</span>
              </div>
           </div>
         </motion.div>

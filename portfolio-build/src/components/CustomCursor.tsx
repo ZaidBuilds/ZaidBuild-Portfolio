@@ -1,12 +1,13 @@
 "use client";
-import React, { useEffect, useState, useRef } from 'react';
-import { motion, useSpring, useMotionValue, useTransform } from 'framer-motion';
+import React, { useEffect, useState } from 'react';
+import { motion, useSpring, useMotionValue } from 'framer-motion';
 
 export const CustomCursor = () => {
   const [isHovering, setIsHovering] = useState(false);
   const [cursorText, setCursorText] = useState("");
-  
-  // Position values
+  const [isMobile, setIsMobile] = useState(true); // Default to mobile to prevent flash
+
+  // Position values - ALWAYS call hooks before any conditional
   const mouseX = useMotionValue(-100);
   const mouseY = useMotionValue(-100);
 
@@ -15,7 +16,21 @@ export const CustomCursor = () => {
   const smoothX = useSpring(mouseX, springConfig);
   const smoothY = useSpring(mouseY, springConfig);
 
+  // Check for mobile/touch device
   useEffect(() => {
+    const checkMobile = () => {
+      const isTouchDevice = window.matchMedia('(pointer: coarse)').matches;
+      const isSmallScreen = window.innerWidth < 768;
+      setIsMobile(isTouchDevice || isSmallScreen);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  useEffect(() => {
+    if (isMobile) return;
+
     const handleMouseMove = (e: MouseEvent) => {
       mouseX.set(e.clientX);
       mouseY.set(e.clientY);
@@ -40,7 +55,10 @@ export const CustomCursor = () => {
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseover', handleMouseOver);
     };
-  }, [mouseX, mouseY]);
+  }, [mouseX, mouseY, isMobile]);
+
+  // Don't render custom cursor on mobile - AFTER all hooks are called
+  if (isMobile) return null;
 
   return (
     <>
@@ -54,7 +72,7 @@ export const CustomCursor = () => {
         className="fixed w-[600px] h-[600px] rounded-full blur-[120px] pointer-events-none z-[1] -translate-x-1/2 -translate-y-1/2"
       />
 
-      <div className="fixed inset-0 pointer-events-none z-[99999] hidden md:block">
+      <div className="fixed inset-0 pointer-events-none z-[99999]">
         
         {/* Main Dot */}
         <motion.div
@@ -84,6 +102,10 @@ export const CustomCursor = () => {
       </div>
 
       <style jsx global>{`
+        body, a, button, .clickable { 
+          cursor: auto !important; 
+        }
+        
         @media (pointer: fine) {
           body, a, button, .clickable { 
             cursor: none !important; 

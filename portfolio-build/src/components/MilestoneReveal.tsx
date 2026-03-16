@@ -21,7 +21,7 @@ export const MilestoneReveal = () => {
   }, [isInView]);
 
   return (
-    <section ref={ref} className="bg-[#080808] py-32 flex flex-col items-center justify-center relative overflow-hidden border-t border-white/5">
+    <section ref={ref} className="bg-[#080808] py-20 md:py-32 flex flex-col items-center justify-center relative overflow-hidden border-t border-white/5">
       
       {/* Background Pixel Pattern */}
       <div className="absolute inset-0 opacity-[0.03] pointer-events-none" 
@@ -38,30 +38,30 @@ export const MilestoneReveal = () => {
         transition={{ duration: 0.8, ease: "circOut" }}
         className="relative z-10 text-center"
       >
-        <span className="font-mono text-[0.6rem] uppercase tracking-[0.5em] text-white/30 mb-8 block">
+        <span className="font-mono text-[0.55rem] md:text-[0.6rem] uppercase tracking-[0.5em] text-white/30 mb-4 md:mb-8 block">
           Current Operating Cycle
         </span>
         
-        <h2 className="font-serif italic text-[clamp(4.5rem,15vw,13rem)] text-white leading-none mb-4 select-none">
-          {count.toLocaleString()}<span className="text-white/20 text-[0.3em] font-sans ml-4 tracking-normal font-light">Pixels.</span>
+        <h2 className="font-serif italic text-[clamp(3.5rem,15vw,13rem)] text-white leading-none mb-2 md:mb-4 select-none">
+          {count.toLocaleString()}<span className="text-white/20 text-[0.3em] font-sans ml-2 md:ml-4 tracking-normal font-light">Pixels.</span>
         </h2>
         
-        <p className="font-sans font-black text-[clamp(1.5rem,5vw,4rem)] text-white tracking-tighter uppercase px-8 mix-blend-difference">
+        <p className="font-sans font-black text-[clamp(1.25rem,5vw,4rem)] text-white tracking-tighter uppercase px-4 md:px-8 mix-blend-difference">
            Thanks for scrolling
         </p>
 
-        <div className="mt-16 flex flex-col items-center gap-4">
-           <div className="w-[1px] h-16 bg-gradient-to-b from-white/20 to-transparent" />
-           <span className="font-mono text-[0.6rem] uppercase tracking-widest text-white/10 italic">Neural Connection Stable</span>
+        <div className="mt-10 md:mt-16 flex flex-col items-center gap-4">
+           <div className="w-[1px] h-12 md:h-16 bg-gradient-to-b from-white/20 to-transparent" />
+           <span className="font-mono text-[0.55rem] md:text-[0.6rem] uppercase tracking-widest text-white/10 italic">Neural Connection Stable</span>
         </div>
       </motion.div>
 
-      {/* Side HUD Elements */}
-      <div className="absolute left-10 top-1/2 -translate-y-1/2 flex flex-col gap-6 font-mono text-[0.5rem] text-white/5 uppercase tracking-[0.4em] vertical-text">
+      {/* Side HUD Elements - Hidden on mobile */}
+      <div className="hidden md:flex absolute left-10 top-1/2 -translate-y-1/2 flex-col gap-6 font-mono text-[0.5rem] text-white/5 uppercase tracking-[0.4em] vertical-text">
          <span>Cycle_Alpha_01</span>
          <span>Hash_8829_X</span>
       </div>
-      <div className="absolute right-10 top-1/2 -translate-y-1/2 flex flex-col gap-6 font-mono text-[0.5rem] text-white/5 uppercase tracking-[0.4em] vertical-text">
+      <div className="hidden md:flex absolute right-10 top-1/2 -translate-y-1/2 flex-col gap-6 font-mono text-[0.5rem] text-white/5 uppercase tracking-[0.4em] vertical-text">
          <span>Status_Nominal</span>
          <span>Sync_True</span>
       </div>

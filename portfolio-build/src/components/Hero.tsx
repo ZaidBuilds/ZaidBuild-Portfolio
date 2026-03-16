@@ -8,9 +8,23 @@ export const Hero = () => {
   const [images, setImages] = useState<string[]>([]);
   const [frameIndex, setFrameIndex] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Check for mobile device
+  useEffect(() => {
+    const checkMobile = () => {
+      const isTouchDevice = window.matchMedia('(pointer: coarse)').matches;
+      const isSmallScreen = window.innerWidth < 768;
+      setIsMobile(isTouchDevice || isSmallScreen);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // SUPPORTING MORE FRAMES (User can add up to 240+ frames)
-  const totalFrames = 120; // Keep at 120 for now but logic is ready for more
+  // Use fewer frames on mobile for better performance
+  const totalFrames = isMobile ? 60 : 120;
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -71,8 +85,11 @@ export const Hero = () => {
   const askZaidBubbleOpacity = useTransform(scrollYProgress, [0.05, 0.12], [0, 1]);
   const askZaidBubbleY = useTransform(scrollYProgress, [0.05, 0.12], [6, 0]);
 
+  // Adjust scroll height based on device type
+  const scrollHeight = isMobile ? "200vh" : "450vh";
+
   return (
-    <section ref={containerRef} className="relative h-[450vh] w-full bg-[#080808]">
+    <section ref={containerRef} className="relative w-full bg-[#080808]" style={{ height: scrollHeight }}>
       <div
         className="sticky top-0 w-full overflow-hidden flex flex-col justify-end hero-sticky"
         style={{
@@ -148,7 +165,7 @@ export const Hero = () => {
         </div>
 
         {/* ── Ask Zaid (hero only): right side, vertical, line attached — tap opens chatbot ── */}
-        <div className="absolute right-6 top-[5.25rem] bottom-auto z-40 pointer-events-auto hidden sm:block">
+        <div className="absolute right-6 top-[5.25rem] bottom-auto z-40 pointer-events-auto">
           <button
             onClick={() => (window as any).openAskZaid?.()}
             className="group flex flex-col items-end cursor-pointer text-right focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50 rounded"
@@ -167,7 +184,7 @@ export const Hero = () => {
             />
             <motion.div
               style={{ opacity: askZaidBubbleOpacity, y: askZaidBubbleY }}
-              className="mt-0.5 px-3 py-2 rounded-lg border border-white/15 bg-black/60 backdrop-blur-sm min-w-[180px] text-right"
+              className="hidden sm:block mt-0.5 px-3 py-2 rounded-lg border border-white/15 bg-black/60 backdrop-blur-sm min-w-[180px] text-right"
             >
               <p className="font-mono text-[0.6rem] uppercase tracking-[0.12em] text-white/70 leading-snug">
                 Don&apos;t scroll 6689 pixel — <span className="text-white font-semibold">askZaid!</span>
