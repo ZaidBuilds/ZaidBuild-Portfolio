@@ -53,7 +53,7 @@ export const ExperienceTimeline = () => {
   const x = useTransform(scrollYProgress, [0, 1], ["0%", isMobile ? "-60%" : "-90%"]);
 
   return (
-    <section id="experience" ref={containerRef} className="relative bg-[#080808]" style={{ height: isMobile ? "300vh" : "400vh" }}>
+    <section key={isMobile ? 'mobile' : 'desktop'} id="experience" ref={containerRef} className="relative bg-[#080808] overflow-hidden" style={{ height: isMobile ? "300vh" : "400vh" }}>
       <div className="sticky top-0 h-screen w-full flex flex-col justify-center overflow-hidden">
         
         {/* Header (Stay fixed) */}

@@ -93,7 +93,7 @@ export const SelectedWorks = () => {
   const x = useTransform(scrollYProgress, [0, 1], ["0%", isMobile ? "-80%" : "-180%"]);
 
   return (
-    <section id="works" ref={containerRef} className="relative bg-[#080808]" style={{ height: isMobile ? "250vh" : "400vh" }}>
+    <section key={isMobile ? 'mobile' : 'desktop'} id="works" ref={containerRef} className="relative bg-[#080808] overflow-hidden" style={{ height: isMobile ? "250vh" : "400vh" }}>
       <div className="sticky top-0 h-screen w-full flex flex-col justify-start pt-[10vh] overflow-visible">
         
         {/* Section Header */}

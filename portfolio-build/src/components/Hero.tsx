@@ -22,9 +22,8 @@ export const Hero = () => {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // SUPPORTING MORE FRAMES (User can add up to 240+ frames)
-  // Use fewer frames on mobile for better performance
-  const totalFrames = isMobile ? 60 : 120;
+  // Universal Frame Count: 120 frames for buttery smooth laptop AND mobile experience
+  const totalFrames = 120;
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -44,23 +43,28 @@ export const Hero = () => {
     let loadedCount = 0;
     const preloadedImages: string[] = [];
 
+    // Preload all 120 frames sequentially locking them in browser cache.
+    // By keeping it uniform, we completely avoid React useEffect re-triggering logic
+    // on mobile, preventing network stalling and ensuring 100% reliable smoothness.
     for (let i = 1; i <= totalFrames; i++) {
       const img = new Image();
       const paddedIndex = i.toString().padStart(3, "0");
       const src = `/sequence/ezgif-frame-${paddedIndex}.png`;
+      
       img.src = src;
       img.onload = () => {
         loadedCount++;
-        if (loadedCount === totalFrames) {
+        // Optimistic rendering: release component lock early so UI remains blazing fast
+        if (loadedCount >= 20) { 
           setIsLoaded(true);
         }
       };
       preloadedImages.push(src);
     }
     setImages(preloadedImages);
-  }, [totalFrames]);
+  }, []); // Empty dependency array secures single preload lifecycle
 
-  // Map scroll progress to sequence frames with sub-frame interpolation logic
+  // Map scroll progress strictly to 0-119 index
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
     const rawIndex = latest * (totalFrames - 1);
     const index = Math.floor(rawIndex);
@@ -89,7 +93,7 @@ export const Hero = () => {
   const scrollHeight = isMobile ? "200vh" : "450vh";
 
   return (
-    <section ref={containerRef} className="relative w-full bg-[#080808]" style={{ height: scrollHeight }}>
+    <section key={isMobile ? 'mobile' : 'desktop'} ref={containerRef} className="relative w-full bg-[#080808]" style={{ height: scrollHeight }}>
       <div
         className="sticky top-0 w-full overflow-hidden flex flex-col justify-end hero-sticky"
         style={{

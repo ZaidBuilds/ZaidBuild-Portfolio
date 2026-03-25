@@ -63,7 +63,7 @@ export const TechArsenal = () => {
   const scale = useTransform(smoothProgress, [0.3, 0.45], [0.8, 1]);
 
   return (
-    <section id="stack" ref={containerRef} className="relative bg-[#080808] py-20 md:py-40 overflow-hidden">
+    <section key={isMobile ? 'mobile' : 'desktop'} id="stack" ref={containerRef} className="relative bg-[#080808] py-20 md:py-40 overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 text-center">
         <motion.h2 
           className="font-serif italic text-[clamp(2.5rem,7vw,5rem)] text-white uppercase tracking-[0.05em] mb-40"
@@ -74,19 +74,20 @@ export const TechArsenal = () => {
           Tech <span className="text-white/20">Arsenal.</span>
         </motion.h2>
 
-        <div className="relative h-[500px] md:h-[700px] flex items-center justify-center">
+        <div className="relative h-[600px] md:h-[700px] flex items-center justify-center">
           {TOOLS.map((tool, i) => {
-            // Mobile: 3 columns, Desktop: 6 columns
-            const cols = isMobile ? 3 : 6;
+            // Mobile: 2 columns (12 items / 2 = 6 rows), Desktop: 6 columns (12 items / 6 = 2 rows)
+            const cols = isMobile ? 2 : 6;
             const row = Math.floor(i / cols);
             const col = i % cols;
             
-            const cardWidth = isMobile ? 100 : 190;
-            const cardHeight = isMobile ? 140 : 280;
-            const cardOffset = isMobile ? 1 : 2.5;
+            const cardWidth = isMobile ? 120 : 190;
+            const cardHeight = isMobile ? 150 : 280;
+            const cardOffset = isMobile ? 0.5 : 2.5; // X-axis center
+            const rowOffset = isMobile ? 2.5 : 0.5; // Y-axis center
             
             const targetX = (col - cardOffset) * cardWidth;
-            const targetY = (row - 0.5) * cardHeight;
+            const targetY = (row - rowOffset) * cardHeight;
 
             const x = useTransform(spreadX, [0, 1], [0, targetX]);
             const y = useTransform(spreadX, [0, 1], [i * 3, targetY]);
@@ -103,7 +104,7 @@ export const TechArsenal = () => {
                   rotate,
                   zIndex: 20 - i
                 }}
-                className="absolute w-[90px] h-[130px] md:w-[180px] md:h-[260px] bg-[#0d0d0d] border border-white/10 rounded-xl md:rounded-2xl p-3 md:p-6 flex flex-col items-center justify-center gap-3 md:gap-8 shadow-[0_20px_50px_rgba(0,0,0,0.8)] transition-all duration-500 hover:border-white/40 hover:bg-[#111111]"
+                className="absolute w-[100px] h-[130px] md:w-[180px] md:h-[260px] bg-[#0d0d0d] border border-white/10 rounded-xl md:rounded-2xl p-3 md:p-6 flex flex-col items-center justify-center gap-3 md:gap-8 shadow-[0_20px_50px_rgba(0,0,0,0.8)] transition-all duration-500 hover:border-white/40 hover:bg-[#111111]"
               >
                 <div className="w-10 h-10 md:w-20 md:h-20 flex items-center justify-center bg-white/[0.05] rounded-lg md:rounded-2xl border border-white/10 shadow-inner group overflow-hidden relative">
                    <tool.icon size={isMobile ? 20 : 40} style={{ color: tool.color }} className="relative z-10 drop-shadow-[0_0_15px_rgba(255,255,255,0.1)]" />

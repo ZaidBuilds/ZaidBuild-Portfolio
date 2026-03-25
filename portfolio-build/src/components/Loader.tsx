@@ -11,7 +11,7 @@ export const Loader = ({ onComplete }: { onComplete: () => void }) => {
       setProgress((prev) => {
         if (prev >= 100) {
           clearInterval(timer);
-          setTimeout(onComplete, 1000);
+          setTimeout(onComplete, 300); // Trigger instantly
           return 100;
         }
         
@@ -20,9 +20,9 @@ export const Loader = ({ onComplete }: { onComplete: () => void }) => {
         if (prev === 50) setStatus("Calibrating LLM Nodes...");
         if (prev === 80) setStatus("Deploying Agentic Framework...");
         
-        return prev + 1;
+        return prev + 3; // Increase progress speed
       });
-    }, 30);
+    }, 15); // Decrease interval time from 30ms to 15ms
 
     return () => clearInterval(timer);
   }, [onComplete]);
